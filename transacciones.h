@@ -1,0 +1,6 @@
+#ifndef TRANSACCIONES_H_INCLUDED
+#define TRANSACCIONES_H_INCLUDED
+
+#include "estructuras.h"
+
+#endif // TRANSACCIONES_H_INCLUDED
