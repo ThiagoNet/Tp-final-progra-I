@@ -31,9 +31,34 @@
 		<Compiler>
 			<Add option="-Wall" />
 		</Compiler>
-		<Unit filename="main.c">
+		<Unit filename="codigo/estructuras.h" />
+		<Unit filename="codigo/fechas.c">
 			<Option compilerVar="CC" />
 		</Unit>
+		<Unit filename="codigo/fechas.h" />
+		<Unit filename="codigo/main.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="codigo/menu.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="codigo/menu.h" />
+		<Unit filename="codigo/personas.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="codigo/personas.h" />
+		<Unit filename="codigo/transacciones.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="codigo/transacciones.h" />
+		<Unit filename="codigo/usuarios.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="codigo/usuarios.h" />
+		<Unit filename="codigo/videojuegos.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="codigo/videojuegos.h" />
 		<Extensions>
 			<lib_finder disable_auto="1" />
 		</Extensions>
