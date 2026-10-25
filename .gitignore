@@ -53,3 +53,12 @@ dkms.conf
 
 # debug information files
 *.dwo
+
+# Code::Blocks
+bin/
+obj/
+*.layout
+*.depend
+
+# Datos locales del programa
+*.bin
