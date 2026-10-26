@@ -2,9 +2,13 @@
 #include <stdlib.h>
 #include "usuarios.h"
 #include "menu.h"
+#include <string.h>
 
 int main()
 {
-    printf("Hello world!\n");
+    Usuario usuarioActual;
+
+    crearAdminPorDefecto();
+
     return 0;
 }
