@@ -23,6 +23,15 @@ if(archivo == NULL){
 }
 fwrite(&admin, sizeof(Usuario), 1, archivo);
 fclose(archivo);
+}
+int validarCredenciales(const char *usuario, const char *contrasenia, Usuario *encontrado){
+FILE *archivo = fopen(ARCHIVO_USUARIOS, "rb");
+if(archivo == NULL){
+    printf("No se pudo abrir el archivo\n");
+    return 0;
+}
+Usuario actual;
+int valido = 0;
 
 while(!valido && fread(&actual, sizeof(Usuario), 1, archivo)== 1){
     if(strcmp(actual.usuario, usuario) == 0 && strcmp(actual.contrasenia, contrasenia) == 0){
