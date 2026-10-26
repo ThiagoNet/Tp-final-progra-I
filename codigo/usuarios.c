@@ -43,5 +43,28 @@ fclose(archivo);
 return valido;
 }
 
+int login(Usuario *usuarioLogueado){
+
+char usuario[20];
+char contrasenia[20];
+int acceso = 0;
+int intentos = 0;
+
+printf("----INICIO DE SESION----\n");
+while(!acceso && intentos < 3){
+    printf("Ingrese el usuario:\n");
+    scanf("%19s", usuario);
+    printf("Ingrese su contrasenia\n");
+    scanf("%19s", contrasenia);
+    acceso = validarCredenciales(usuario, contrasenia, usuarioLogueado);
+    if(acceso == 0){
+      intentos++;
+      printf("Credenciales incorrectas. Intentos: (%d/3)\n", intentos);
+    }
+}
+return acceso;
+}
+
+
 
 
