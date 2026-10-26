@@ -23,6 +23,7 @@ if(archivo == NULL){
 }
 fwrite(&admin, sizeof(Usuario), 1, archivo);
 fclose(archivo);
+
 }
 
 
