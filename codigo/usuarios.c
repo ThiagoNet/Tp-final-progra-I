@@ -24,6 +24,15 @@ if(archivo == NULL){
 fwrite(&admin, sizeof(Usuario), 1, archivo);
 fclose(archivo);
 
+while(!valido && fread(&actual, sizeof(Usuario), 1, archivo)== 1){
+    if(strcmp(actual.usuario, usuario) == 0 && strcmp(actual.contrasenia, contrasenia) == 0){
+     *encontrado = actual;
+    valido = 1;
+    }
 }
+fclose(archivo);
+return valido;
+}
+
 
 
