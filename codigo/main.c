@@ -9,6 +9,11 @@ int main()
     Usuario usuarioActual;
 
     crearAdminPorDefecto();
-
+    if (login(&usuarioActual)) {
+        printf("Bienvenido, %s\n", usuarioActual.persona.nombre);
+    } else {
+        printf("Acceso denegado.\n");
+    }
     return 0;
 }
+
