@@ -3,4 +3,6 @@
 
 #include "estructuras.h"
 
+int buscarPersonaPorDni(const char *dni, Persona *resultado);
+
 #endif // PERSONAS_H_INCLUDED

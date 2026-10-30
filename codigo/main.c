@@ -15,6 +15,7 @@ Usuario usuarioActual;
     } else {
         printf("Acceso denegado.\n");
     }
+
     return 0;
 }
 
