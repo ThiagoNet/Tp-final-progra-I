@@ -14,5 +14,7 @@ int main()
 
     agregar_Videojuego("videojuegos.dat");
 
+    listado_Videojuego("videojuegos.dat");
+
     return 0;
 }

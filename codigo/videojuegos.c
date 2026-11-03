@@ -3,6 +3,9 @@
 #include <stdlib.h>
 #include "videojuegos.h"
 
+
+//FUNCION 3a:
+
 void agregar_Videojuego(const char *archivo_Videojuego)
 {
 
@@ -11,7 +14,7 @@ void agregar_Videojuego(const char *archivo_Videojuego)
     if(archivo == NULL)
     {
 
-        archivo == fopen(archivo_Videojuego, "wb+");
+        archivo = fopen(archivo_Videojuego, "wb+");
 
         if(archivo == NULL)
         {
@@ -106,4 +109,31 @@ void agregar_Videojuego(const char *archivo_Videojuego)
 
 }
 
+//3e:
+void listado_Videojuego(const char *archivo_Videojuego)
+{
 
+    FILE *archivo = fopen(archivo_Videojuego, "rb");
+
+
+    if(archivo == NULL)
+    {
+        printf("ERROR!! No se pudo abrir el archivo...\n");
+        return;
+    }
+
+    Videojuego v;
+
+    printf("=====LISTADO DE VIDEOJUEGOS=====\n");
+    printf("|| %.30s || %.10s || %s\n", "TITULO", "PLATAFORMA", "STOCK");
+
+
+    while(fread(&v, sizeof(Videojuego), 1, archivo) == 1){
+
+        printf("|| %.30s || %.10s || %d\n", v.titulo, v.plataforma, v.stock);
+
+    }
+
+    fclose(archivo);
+
+}
