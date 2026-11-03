@@ -44,7 +44,7 @@ void ejecutarMenu(const Usuario *usuarioActual)
             printf("Agregar / Modificar persona - En construccion\n");
             break;
         case 3:
-            printf("Listado de personas - En construccion\n");
+            listadoPersonas();
             break;
         case 4:
             printf("Info detallada de persona - En construccion\n");

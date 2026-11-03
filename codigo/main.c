@@ -19,3 +19,4 @@ Usuario usuarioActual;
     return 0;
 }
 
+listadoPersonas();
