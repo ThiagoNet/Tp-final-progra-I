@@ -81,7 +81,7 @@ Persona actual;
 int posicion = -1;
 int indice = 0;
 
-while(posicion == -1 && fread(&actual, sizeof(Persona), 1,archivo)== -1){
+while(posicion == -1 && fread(&actual, sizeof(Persona), 1,archivo)== 1){
     if(strcmp(actual.dni, dni) == 0){
         posicion = indice;
     }
@@ -89,4 +89,16 @@ while(posicion == -1 && fread(&actual, sizeof(Persona), 1,archivo)== -1){
 }
 fclose(archivo);
 return posicion;
+}
+
+void guardarPersonaNueva(const Persona *p){
+
+FILE *archivo = fopen(ARCHIVO_PERSONAS, "ab");
+if(archivo == NULL){
+    printf("No se pudo abrir el archivo de personas\n");
+    return;
+}
+
+fwrite(p, sizeof(Persona), 1, archivo);
+fclose(archivo);
 }
