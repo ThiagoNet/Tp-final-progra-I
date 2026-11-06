@@ -67,7 +67,7 @@ scanf(" %29[^\n]", p->direccion);
 printf("Ingrese el telefono de la persona\n");
 scanf(" %19s", p->telefono);
 printf("Ingrese el rol de la persona\n");
-scanf(" %14s", p->rol);
+scanf(" %14[^\n]", p->rol);
 }
 
 int buscarPosicionPersona(const char *dni){
@@ -101,4 +101,43 @@ if(archivo == NULL){
 
 fwrite(p, sizeof(Persona), 1, archivo);
 fclose(archivo);
+}
+
+void sobrescribirPersona(int posicion, const Persona *p){
+
+FILE *archivo = fopen(ARCHIVO_PERSONAS, "rb+");
+if(archivo == NULL){
+    printf("No se pudo abrir el archivo de personas\n");
+    return;
+}
+
+fseek(archivo, posicion * sizeof(Persona), SEEK_SET);
+fwrite(p, sizeof(Persona), 1, archivo);
+fclose(archivo);
+}
+
+void agregarModificarPersona(void){
+
+char dni[15];
+
+printf("Ingrese el numero de dni de la persona:\n");
+scanf("%14s", dni);
+
+int posicion = buscarPosicionPersona(dni);
+
+Persona nueva = {0};
+strcpy(nueva.dni, dni);
+if(posicion != -1){
+    printf("La persona ya existe, ingrese los nuevos datos\n");
+}
+pedirDatosPersona(&nueva);
+
+if(posicion == -1){
+    guardarPersonaNueva(&nueva);
+    printf("Persona Agregada!\n");
+}else{
+sobrescribirPersona(posicion, &nueva);
+printf("Persona modificada!\n");
+}
+
 }

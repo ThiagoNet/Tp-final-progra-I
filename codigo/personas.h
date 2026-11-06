@@ -6,4 +6,5 @@
 int buscarPersonaPorDni(const char *dni, Persona *resultado);
 void listadoPersonas(void);
 void mostrarPersonaDetallada(void);
+void agregarModificarPersona(void);
 #endif // PERSONAS_H_INCLUDED

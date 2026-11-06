@@ -42,7 +42,7 @@ void ejecutarMenu(const Usuario *usuarioActual)
             printf("Agregar / Modificar videojuego - En construccion\n");
             break;
         case 2:
-            printf("Agregar / Modificar persona - En construccion\n");
+            agregarModificarPersona();
             break;
         case 3:
             listadoPersonas();
