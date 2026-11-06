@@ -42,3 +42,18 @@ while(fread(&actual, sizeof(Persona), 1, archivo) == 1){
 fclose(archivo);
 return;
 }
+
+void mostrarPersonaDetallada(void){
+
+char dni[15];
+Persona encontrada;
+
+printf("Ingrese un dni:\n");
+scanf("%14s", dni);
+
+if (buscarPersonaPorDni(dni, &encontrada) == 1){
+    printf("Dni: %s Nombre: %s Telefono: %s Direccion: %s Rol: %s\n", encontrada.dni, encontrada.nombre, encontrada.telefono,encontrada.direccion, encontrada.rol);
+}else{
+printf("No existe una persona con ese dni\n");
+}
+}

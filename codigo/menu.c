@@ -8,6 +8,7 @@
 void mostrarMenu(void)
 {
 
+    system("cls");
     printf("----MENU PRINCIPAL----\n");
     printf("1. Agregar / Modificar videojuego\n");
     printf("2. Agregar / Modificar persona\n");
@@ -47,7 +48,7 @@ void ejecutarMenu(const Usuario *usuarioActual)
             listadoPersonas();
             break;
         case 4:
-            printf("Info detallada de persona - En construccion\n");
+            mostrarPersonaDetallada();
             break;
         case 5:
             printf("Listado de videojuegos - En construccion\n");
@@ -82,6 +83,7 @@ void ejecutarMenu(const Usuario *usuarioActual)
         default:
             printf("Opcion invalida\n");
         }
+        system("pause");
     }
     while (opcion != 0);
 
