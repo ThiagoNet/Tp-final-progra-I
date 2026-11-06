@@ -57,3 +57,36 @@ if (buscarPersonaPorDni(dni, &encontrada) == 1){
 printf("No existe una persona con ese dni\n");
 }
 }
+
+void pedirDatosPersona(Persona *p){
+
+printf("Ingrese el nombre de la persona\n");
+scanf(" %49[^\n]", p->nombre);
+printf("Ingrese la direccion de la persona\n");
+scanf(" %29[^\n]", p->direccion);
+printf("Ingrese el telefono de la persona\n");
+scanf(" %19s", p->telefono);
+printf("Ingrese el rol de la persona\n");
+scanf(" %14s", p->rol);
+}
+
+int buscarPosicionPersona(const char *dni){
+
+FILE *archivo = fopen(ARCHIVO_PERSONAS, "rb");
+if(archivo == NULL){
+    return -1;
+}
+
+Persona actual;
+int posicion = -1;
+int indice = 0;
+
+while(posicion == -1 && fread(&actual, sizeof(Persona), 1,archivo)== -1){
+    if(strcmp(actual.dni, dni) == 0){
+        posicion = indice;
+    }
+    indice++;
+}
+fclose(archivo);
+return posicion;
+}
