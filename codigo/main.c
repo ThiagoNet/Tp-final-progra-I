@@ -15,8 +15,7 @@ Usuario usuarioActual;
     } else {
         printf("Acceso denegado.\n");
     }
-
-    return 0;
+pedirFecha();
+mostrarFecha();
+return 0;
 }
-
-listadoPersonas();

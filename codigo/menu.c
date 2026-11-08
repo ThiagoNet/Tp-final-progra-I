@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include "menu.h"
 #include "usuarios.h"
 #include "personas.h"
