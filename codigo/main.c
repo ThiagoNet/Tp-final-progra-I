@@ -15,7 +15,6 @@ Usuario usuarioActual;
     } else {
         printf("Acceso denegado.\n");
     }
-pedirFecha();
-mostrarFecha();
+
 return 0;
 }

@@ -40,7 +40,7 @@ void ejecutarMenu(const Usuario *usuarioActual)
         switch (opcion)
         {
         case 1:
-            printf("Agregar / Modificar videojuego - En construccion\n");
+            agregar_Videojuego(ARCHIVO_VIDEOJUEGOS);
             break;
         case 2:
             agregarModificarPersona();
@@ -52,7 +52,7 @@ void ejecutarMenu(const Usuario *usuarioActual)
             mostrarPersonaDetallada();
             break;
         case 5:
-            printf("Listado de videojuegos - En construccion\n");
+            listado_Videojuego(ARCHIVO_VIDEOJUEGOS);
             break;
         case 6:
             printf("Videojuegos por plataforma - En construccion\n");
@@ -61,13 +61,13 @@ void ejecutarMenu(const Usuario *usuarioActual)
             printf("Info detallada de videojuego - En construccion\n");
             break;
         case 8:
-            printf("Resumen de transacciones - En construccion\n");
+            listarTransaccionesResumen();
             break;
         case 9:
-            printf("Detalle de transaccion - En construccion\n");
+            mostrarTransaccionDetalle();
             break;
         case 10:
-            printf("Registrar venta - En construccion\n");
+            registrarVenta(usuarioActual->persona.dni);
             break;
         case 11:
             printf("Recaudacion mensual - En construccion\n");
