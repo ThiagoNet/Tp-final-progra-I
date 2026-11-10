@@ -17,14 +17,9 @@ Usuario usuarioActual;
         printf("Acceso denegado.\n");
     }
 
-<<<<<<< HEAD
-
     agregar_Videojuego("videojuegos.dat");
 
     listado_Videojuego("videojuegos.dat");
 
     return 0;
-=======
-return 0;
->>>>>>> parte1-personas
 }
