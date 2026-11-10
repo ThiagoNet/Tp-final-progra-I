@@ -7,7 +7,7 @@
 
 int main()
 {
-    Usuario usuarioActual;
+Usuario usuarioActual;
 
     crearAdminPorDefecto();
     if (login(&usuarioActual)) {
