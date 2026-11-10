@@ -3,4 +3,7 @@
 
 #include "estructuras.h"
 
+Fecha pedirFecha(void);
+void mostrarFecha(Fecha f);
+
 #endif // FECHAS_H_INCLUDED
