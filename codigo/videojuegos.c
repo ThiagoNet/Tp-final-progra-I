@@ -77,7 +77,7 @@ void agregar_Videojuego(const char *archivo_Videojuego)
         scanf("%s", v.genero);
 
 
-        fseek(archivo, -sizeof(Videojuego), SEEK_CUR);
+        fseek(archivo, -(long)sizeof(Videojuego), SEEK_CUR);
         fwrite(&v, sizeof(Videojuego), 1, archivo);
 
     }
@@ -106,6 +106,8 @@ void agregar_Videojuego(const char *archivo_Videojuego)
         fwrite(&v, sizeof(Videojuego), 1, archivo);
 
     }
+
+    fclose(archivo);
 
 }
 
@@ -136,4 +138,51 @@ void listado_Videojuego(const char *archivo_Videojuego)
 
     fclose(archivo);
 
+}
+
+//Funciones para la venta (3j):
+int buscarVideojuegoPorId(int id, Videojuego *resultado){
+
+    FILE *archivo = fopen(ARCHIVO_VIDEOJUEGOS, "rb");
+
+    if(archivo == NULL){
+        return 0;
+    }
+
+    Videojuego actual;
+    int encontrado = 0;
+
+    while(!encontrado && fread(&actual, sizeof(Videojuego), 1, archivo) == 1){
+        if(actual.idJuego == id){
+            *resultado = actual;
+            encontrado = 1;
+        }
+    }
+
+    fclose(archivo);
+    return encontrado;
+}
+
+int descontarStock(int id, int cantidad){
+
+    FILE *archivo = fopen(ARCHIVO_VIDEOJUEGOS, "rb+");
+
+    if(archivo == NULL){
+        return 0;
+    }
+
+    Videojuego actual;
+    int actualizado = 0;
+
+    while(!actualizado && fread(&actual, sizeof(Videojuego), 1, archivo) == 1){
+        if(actual.idJuego == id){
+            actual.stock -= cantidad;
+            fseek(archivo, -(long)sizeof(Videojuego), SEEK_CUR);
+            fwrite(&actual, sizeof(Videojuego), 1, archivo);
+            actualizado = 1;
+        }
+    }
+
+    fclose(archivo);
+    return actualizado;
 }
