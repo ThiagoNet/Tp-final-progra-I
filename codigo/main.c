@@ -2,24 +2,24 @@
 #include <stdlib.h>
 #include "usuarios.h"
 #include "menu.h"
-#include <string.h>
 #include "videojuegos.h"
+#include "transacciones.h"
+#include "fechas.h"
 
 int main()
 {
-Usuario usuarioActual;
+    Usuario usuarioActual;
 
     crearAdminPorDefecto();
-    if (login(&usuarioActual)) {
-        printf("Bienvenido, %s\n", usuarioActual.persona.nombre);
+
+    if(login(&usuarioActual) == 1)
+    {
         ejecutarMenu(&usuarioActual);
-    } else {
-        printf("Acceso denegado.\n");
     }
-
-    agregar_Videojuego("videojuegos.dat");
-
-    listado_Videojuego("videojuegos.dat");
+    else
+    {
+        printf("Usuario o contrasenia incorrectos\n");
+    }
 
     return 0;
 }
