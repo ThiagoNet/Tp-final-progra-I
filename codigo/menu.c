@@ -55,10 +55,10 @@ void ejecutarMenu(const Usuario *usuarioActual)
             listado_Videojuego(ARCHIVO_VIDEOJUEGOS);
             break;
         case 6:
-            printf("Videojuegos por plataforma - En construccion\n");
+            ver_Juegos_Por_Plataforma(ARCHIVO_VIDEOJUEGOS);
             break;
         case 7:
-            printf("Info detallada de videojuego - En construccion\n");
+            info_De_Videojuego(ARCHIVO_VIDEOJUEGOS);
             break;
         case 8:
             listarTransaccionesResumen();
@@ -70,13 +70,13 @@ void ejecutarMenu(const Usuario *usuarioActual)
             registrarVenta(usuarioActual->persona.dni);
             break;
         case 11:
-            printf("Recaudacion mensual - En construccion\n");
+            reporte_Recaudacion_Mensual();
             break;
         case 12:
-            printf("Venta de mayor ganancia - En construccion\n");
+            reporte_Mayor_Ganancia();
             break;
         case 13:
-            printf("Stock critico - En construccion\n");
+            reporte_Stock_Critico(ARCHIVO_VIDEOJUEGOS);
             break;
         case 0:
             printf("Hasta luego\n");
