@@ -5,6 +5,7 @@
 #define ARCHIVO_PERSONAS "personas.bin"
 #define ARCHIVO_VIDEOJUEGOS "videojuegos.bin"
 #define ARCHIVO_TRANSACCIONES "transacciones.bin"
+#define ARCHIVO_RESERVAS "reservas.bin"
 
 typedef struct stPersona {
     char dni[15];
@@ -23,7 +24,7 @@ typedef struct stUsuario {
 typedef struct stVideojuego {
     int idJuego;
     char titulo[50];
-    char plataforma[20];
+    char plataforma[50];
     char genero[20];
     int stock;
     float precioAdquisicion;
@@ -45,5 +46,6 @@ typedef struct stTransaccion {
     char dniCliente[15];
     char dniEmpleado[15];
 } Transaccion;
+
 
 #endif

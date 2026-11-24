@@ -5,6 +5,7 @@
 #include "personas.h"
 #include "videojuegos.h"
 #include "transacciones.h"
+#include "reservas.h".
 
 void mostrarMenu(void)
 {
