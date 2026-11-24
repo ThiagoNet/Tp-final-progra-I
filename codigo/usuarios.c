@@ -1,6 +1,9 @@
 #include <stdio.h>
 #include <string.h>
 #include "usuarios.h"
+#include "validaciones.h"
+
+#define INTENTOS_LOGIN 3
 
 void crearAdminPorDefecto(void)
 {
@@ -53,17 +56,42 @@ int validarCredenciales(const char *usuario, const char *contrasenia, Usuario *e
     return valido;
 }
 
+//Da hasta 3 intentos. Devuelve 1 si entro y 0 si fallo los 3
 int login(Usuario *usuarioLogueado)
 {
 
     char usuario[20];
     char contrasenia[20];
+    int intento = 0;
+    int valido = 0;
 
-    printf("Usuario:\n");
-    scanf("%19s", usuario);
-    printf("Contrasenia:\n");
-    scanf("%19s", contrasenia);
+    while(intento < INTENTOS_LOGIN && valido == 0)
+    {
 
-    return validarCredenciales(usuario, contrasenia, usuarioLogueado);
+        printf("Usuario:\n");
+        scanf("%19s", usuario);
+        limpiar_Buffer();
+
+        printf("Contrasenia:\n");
+        scanf("%19s", contrasenia);
+        limpiar_Buffer();
+
+        valido = validarCredenciales(usuario, contrasenia, usuarioLogueado);
+
+        if(valido == 0)
+        {
+
+            intento++;
+
+            if(intento < INTENTOS_LOGIN)
+            {
+                printf("Usuario o contrasenia incorrectos. Intentos restantes: %d\n\n", INTENTOS_LOGIN - intento);
+            }
+
+        }
+
+    }
+
+    return valido;
+
 }
-

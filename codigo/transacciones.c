@@ -4,6 +4,7 @@
 #include "videojuegos.h"
 #include "fechas.h"
 #include "personas.h"
+#include "validaciones.h"
 
 
 int obtenerProximoIdTransaccion(void)
@@ -55,12 +56,19 @@ void registrarVenta(const char *dniEmpleado)
     int id = 0;
     int cantidad = 0;
     float precioVenta = 0;
+    float totalVenta = 0;
     char dniCliente[15];
     Persona cliente;
     Transaccion t = {0};
 
-    printf("Ingrese el id del juego:\n");
-    scanf("%d", &id);
+    printf("\n=====REGISTRAR VENTA=====\n");
+
+    id = leer_Entero("Ingrese el id del juego (Pon 0 para Salir): ", 0);
+
+    if(id == 0)
+    {
+        return;
+    }
 
     if(buscarVideojuegoPorId(id, &juego) == 0)
     {
@@ -73,24 +81,25 @@ void registrarVenta(const char *dniEmpleado)
         return;
     }
 
-    printf("Ingrese la cantidad deseada:\n");
-    scanf("%d", &cantidad);
+    printf("Juego: %s (stock disponible: %d)\n", juego.titulo, juego.stock);
 
-    if(cantidad <= 0 || cantidad > juego.stock)
+    do
     {
-        printf("Cantidad invalida o stock insuficiente.\n");
-        return;
-    }
+        cantidad = leer_Entero("Ingrese la cantidad deseada: ", 1);
 
-    printf("Ingrese el precio de venta:\n");
-    scanf("%f", &precioVenta);
-    if(precioVenta <= 0)
-    {
-        printf("El precio no puede ser menor a 0\n");
-        return;
+        if(cantidad > juego.stock)
+        {
+            printf("Stock insuficiente (disponible: %d).\n", juego.stock);
+        }
     }
-    printf("Ingrese el dni del cliente:\n");
-    scanf("%14s", dniCliente);
+    while(cantidad > juego.stock);
+
+    precioVenta = leer_Precio("Ingrese el precio de venta unitario: ");
+
+    totalVenta = precioVenta * cantidad;
+    printf("Total de la venta: $%.2f\n", totalVenta);
+
+    leer_Digitos("Ingrese el dni del cliente: ", dniCliente, sizeof(dniCliente), 7);
     if(buscarPersonaPorDni(dniCliente,&cliente) != 1)
     {
         printf("El dni no existe! \n");
@@ -110,6 +119,7 @@ void registrarVenta(const char *dniEmpleado)
     {
         descontarStock(id, cantidad);
         printf("Venta registrada!\n");
+        printf("Total de la venta: $%.2f\n", totalVenta);
         printf("Ganancia obtenida: $%.2f\n", t.gananciaTotal);
         printf("Id transaccion: %d\n", t.idTransaccion);
     }
@@ -135,6 +145,7 @@ void listarTransaccionesResumen(void)
         mostrarFecha(actual.fecha);
         printf(" Id: %d\n", actual.idJuegoVendido);
         printf(" Id transaccion: %d\n", actual.idTransaccion);
+        printf(" Total: $%.2f\n", actual.precioUnitarioVenta * actual.cantidadVendida);
     }
     fclose(archivo);
 }
@@ -150,8 +161,14 @@ void mostrarTransaccionDetalle(void)
     Transaccion actual;
     int encontrada = 0;
     int idBuscado = 0;
-    printf("Ingrese el id a buscar: \n");
-    scanf("%d", &idBuscado);
+
+    idBuscado = leer_Entero("Ingrese el id a buscar (Pon 0 para Salir): ", 0);
+
+    if(idBuscado == 0)
+    {
+        fclose(archivo);
+        return;
+    }
 
     while(!encontrada && fread(&actual, sizeof(Transaccion), 1, archivo)== 1)
     {
@@ -159,11 +176,13 @@ void mostrarTransaccionDetalle(void)
         {
             encontrada = 1;
             printf("ID: %d\n", actual.idTransaccion);
+            printf("Fecha: ");
             mostrarFecha(actual.fecha);
             printf("\nID del juego: %d\n", actual.idJuegoVendido);
             printf("Cantidad vendida: %d\n", actual.cantidadVendida);
-            printf("Precio: %g\n", actual.precioUnitarioVenta);
-            printf("Ganancia: %g\n", actual.gananciaTotal);
+            printf("Precio unitario: $%.2f\n", actual.precioUnitarioVenta);
+            printf("Total: $%.2f\n", actual.precioUnitarioVenta * actual.cantidadVendida);
+            printf("Ganancia: $%.2f\n", actual.gananciaTotal);
             printf("Dni del cliente: %s\n", actual.dniCliente);
             printf("Dni del empleado: %s\n", actual.dniEmpleado);
         }
@@ -196,20 +215,8 @@ void reporte_Recaudacion_Mensual(void)
 
     printf("\n=====RECAUDACION MENSUAL=====\n");
 
-    do
-    {
-        printf("-----Ingrese el mes (1-12): ");
-        scanf("%d", &mes_Buscado);
-
-        if(mes_Buscado < 1 || mes_Buscado > 12)
-        {
-            printf("No existe tal mes\n");
-        }
-    }
-    while(mes_Buscado < 1 || mes_Buscado > 12);
-
-    printf("-----Ingrese anio: ");
-    scanf("%d", &anio_Buscado);
+    mes_Buscado = leer_Opcion("-----Ingrese el mes (1-12): ", 1, 12);
+    anio_Buscado = leer_Entero("-----Ingrese anio: ", 1);
 
     Transaccion actual;
 
@@ -248,7 +255,7 @@ void reporte_Mayor_Ganancia(void)
     }
 
     Transaccion actual;
-    Transaccion mayor;
+    Transaccion mayor = {0};
     int hay_ventas = 0;
 
     while(fread(&actual, sizeof(Transaccion), 1, archivo) == 1)
@@ -275,6 +282,7 @@ void reporte_Mayor_Ganancia(void)
     printf("\nID del juego: %d\n", mayor.idJuegoVendido);
     printf("Cantidad vendida: %d\n", mayor.cantidadVendida);
     printf("Precio unitario: $%.2f\n", mayor.precioUnitarioVenta);
+    printf("Total: $%.2f\n", mayor.precioUnitarioVenta * mayor.cantidadVendida);
     printf("Ganancia total: $%.2f\n", mayor.gananciaTotal);
     printf("Dni del cliente: %s\n", mayor.dniCliente);
     printf("Dni del empleado: %s\n", mayor.dniEmpleado);

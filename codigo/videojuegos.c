@@ -1,163 +1,47 @@
 #include <stdio.h>
 #include <string.h>
-#include <stdlib.h>
 #include "videojuegos.h"
+#include "validaciones.h"
+#include "listas.h"
 
-//Funciones auxiliares de validacion:
-void limpiar_Buffer(void)
+//Devuelve el mayor id que hay en el archivo + 1 (1 si no hay archivo o esta vacio)
+int obtenerProximoIdVideojuego(const char *archivo_Videojuego)
 {
 
-    int c;
+    FILE *archivo = fopen(archivo_Videojuego, "rb");
 
-    while((c = getchar()) != '\n' && c != EOF)
+    if(archivo == NULL)
     {
+        return 1;
     }
 
-}
+    Videojuego actual;
+    int ultimoId = 0;
 
-int leer_Entero(const char *mensaje, int minimo)
-{
-
-    int valor = 0;
-    int ok = 0;
-
-    do
+    while(fread(&actual, sizeof(Videojuego), 1, archivo) == 1)
     {
 
-        printf("%s", mensaje);
-
-        if(scanf("%d", &valor) != 1)
+        if(actual.idJuego > ultimoId)
         {
-            printf("Debe ingresar un numero.\n");
+            ultimoId = actual.idJuego;
         }
-        else if(valor < minimo)
-        {
-            printf("Valor invalido (minimo %d).\n", minimo);
-        }
-        else
-        {
-            ok = 1;
-        }
-
-        limpiar_Buffer();
-
-    }
-    while(ok == 0);
-
-    return valor;
-
-}
-
-float leer_Precio(const char *mensaje)
-{
-
-    float valor = 0;
-    int ok = 0;
-
-    do
-    {
-
-        printf("%s", mensaje);
-
-        if(scanf("%f", &valor) != 1)
-        {
-            printf("Debe ingresar un numero.\n");
-        }
-        else if(valor <= 0)
-        {
-            printf("El precio debe ser mayor a 0.\n");
-        }
-        else
-        {
-            ok = 1;
-        }
-
-        limpiar_Buffer();
-
-    }
-    while(ok == 0);
-
-    return valor;
-
-}
-
-//Un texto es valido si termina en '\0', no tiene caracteres raros
-//y tiene al menos un caracter que no sea espacio ni '0'
-int texto_Valido(const char *texto, int tam)
-{
-
-    int i = 0;
-    int hay_Contenido = 0;
-
-    while(i < tam && texto[i] != '\0')
-    {
-
-        if((unsigned char)texto[i] < 32)
-        {
-            return 0;
-        }
-
-        if(texto[i] != ' ' && texto[i] != '0')
-        {
-            hay_Contenido = 1;
-        }
-
-        i++;
 
     }
 
-    if(i == tam)
-    {
-        return 0;
-    }
+    fclose(archivo);
 
-    return hay_Contenido;
-
-}
-
-void leer_Texto(const char *mensaje, char *destino, int tam)
-{
-
-    char texto[50];
-    int ok = 0;
-
-    do
-    {
-
-        texto[0] = '\0';
-
-        printf("%s", mensaje);
-        scanf(" %49[^\n]", texto);
-        limpiar_Buffer();
-
-        if((int)strlen(texto) >= tam)
-        {
-            printf("Texto demasiado largo (maximo %d caracteres).\n", tam - 1);
-        }
-        else if(texto_Valido(texto, 50) == 0)
-        {
-            printf("Dato invalido: no puede estar vacio ni ser solo ceros.\n");
-        }
-        else
-        {
-            ok = 1;
-        }
-
-    }
-    while(ok == 0);
-
-    strcpy(destino, texto);
+    return ultimoId + 1;
 
 }
 
 void pedir_Datos_Videojuego(Videojuego *v)
 {
 
-    v->stock = leer_Entero("\n---Nuevo Stock: ", 0);
-    v->precioAdquisicion = leer_Precio("\n---Nuevo Precio de Adquisicion: ");
-    leer_Texto("\n---Nuevo Titulo de Juego: ", v->titulo, sizeof(v->titulo));
-    leer_Texto("\n---Nueva Plataforma: ", v->plataforma, sizeof(v->plataforma));
-    leer_Texto("\n---Nuevo Genero: ", v->genero, sizeof(v->genero));
+    v->stock = leer_Entero("\n---Stock: ", 0);
+    v->precioAdquisicion = leer_Precio("\n---Precio de Adquisicion: ");
+    leer_Texto("\n---Titulo de Juego: ", v->titulo, sizeof(v->titulo));
+    elegir_Plataformas(v->plataforma, sizeof(v->plataforma));
+    elegir_Genero(v->genero, sizeof(v->genero));
 
 }
 
@@ -206,24 +90,46 @@ int videojuego_Es_Valido(Videojuego v)
 void agregar_Videojuego(const char *archivo_Videojuego)
 {
 
+    Videojuego v = {0};
+
+    v.idJuego = obtenerProximoIdVideojuego(archivo_Videojuego);
+
+    printf("\n=====AGREGAR VIDEOJUEGO=====\n");
+
+    pedir_Datos_Videojuego(&v);
+
+    FILE *archivo = fopen(archivo_Videojuego, "ab");
+
+    if(archivo == NULL)
+    {
+
+        printf("Error al Abrir o Crear el Archivo\n");
+        return;
+
+    }
+
+    fwrite(&v, sizeof(Videojuego), 1, archivo);
+    fclose(archivo);
+
+    printf("\nVideojuego agregado! ID asignado: %d\n", v.idJuego);
+
+}
+
+//3b:
+void modificar_Videojuego(const char *archivo_Videojuego)
+{
+
     FILE *archivo = fopen(archivo_Videojuego, "rb+");
 
     if(archivo == NULL)
     {
 
-        archivo = fopen(archivo_Videojuego, "wb+");
-
-        if(archivo == NULL)
-        {
-
-            printf("Error al Abrir o Crear el Archivo");
-            return;
-
-        }
+        printf("No hay videojuegos cargados o el archivo no existe\n");
+        return;
 
     }
 
-    int id_Buscado = leer_Entero("Ingrese el ID del Videojuego (Pon 0 para Salir): ", 0);
+    int id_Buscado = leer_Entero("Ingrese el ID del Videojuego a Modificar (Pon 0 para Salir): ", 0);
 
     if(id_Buscado == 0)
     {
@@ -236,17 +142,12 @@ void agregar_Videojuego(const char *archivo_Videojuego)
     Videojuego v = {0};
     int encontrado = 0;
 
-    rewind(archivo);
-
-    while(fread(&v, sizeof(Videojuego), 1, archivo))
+    while(encontrado == 0 && fread(&v, sizeof(Videojuego), 1, archivo) == 1)
     {
 
         if(v.idJuego == id_Buscado)
         {
-
             encontrado = 1;
-            break;
-
         }
 
     }
@@ -254,21 +155,20 @@ void agregar_Videojuego(const char *archivo_Videojuego)
     if(encontrado == 1)
     {
 
+        printf("\nModificando: %s\n", v.titulo);
+
         pedir_Datos_Videojuego(&v);
 
         fseek(archivo, -(long)sizeof(Videojuego), SEEK_CUR);
         fwrite(&v, sizeof(Videojuego), 1, archivo);
 
+        printf("\nVideojuego modificado!\n");
+
     }
     else
     {
 
-        v.idJuego = id_Buscado;
-
-        pedir_Datos_Videojuego(&v);
-
-        fseek(archivo, 0, SEEK_END);
-        fwrite(&v, sizeof(Videojuego), 1, archivo);
+        printf("No se encontro ningun Videojuego con el ID %d.\n", id_Buscado);
 
     }
 
@@ -387,35 +287,59 @@ char pasar_Minuscula(char c)
 
 }
 
+//Compara el nombre exacto contra cada item de la lista separada por comas
+//(ej: "PS5, Nintendo Switch 2" tiene dos items)
 int plataforma_Coincide(const char *plataformas, const char *plataforma_Buscada)
 {
 
     int i = 0;
     int j;
+    int fin;
+    int largo_Item;
     int coincide = 0;
     int largo = strlen(plataforma_Buscada);
 
     while(plataformas[i] != '\0' && coincide == 0)
     {
 
-        //saltar espacios y comas
+        //saltar espacios y comas antes del item
         while(plataformas[i] == ' ' || plataformas[i] == ',')
         {
             i++;
         }
 
-        //comparar desde esta posicion
-        j = 0;
+        //buscar donde termina el item (proxima coma o fin del texto)
+        fin = i;
 
-        while(j < largo && plataformas[i + j] != '\0' && pasar_Minuscula(plataformas[i + j]) == pasar_Minuscula(plataforma_Buscada[j]))
+        while(plataformas[fin] != '\0' && plataformas[fin] != ',')
         {
-            j++;
+            fin++;
         }
 
-        //coincide si leyo todo lo buscado y la plataforma termina ahi
-        if(j == largo && (plataformas[i + j] == '\0' || plataformas[i + j] == ',' || plataformas[i + j] == ' '))
+        //sacar los espacios del final del item
+        while(fin > i && plataformas[fin - 1] == ' ')
         {
-            coincide = 1;
+            fin--;
+        }
+
+        largo_Item = fin - i;
+
+        //solo se compara si el item tiene el mismo largo que lo buscado
+        if(largo_Item == largo)
+        {
+
+            j = 0;
+
+            while(j < largo && pasar_Minuscula(plataformas[i + j]) == pasar_Minuscula(plataforma_Buscada[j]))
+            {
+                j++;
+            }
+
+            if(j == largo)
+            {
+                coincide = 1;
+            }
+
         }
 
         //avanzar hasta la proxima coma
@@ -446,16 +370,14 @@ void ver_Juegos_Por_Plataforma(const char *archivo_Videojuego)
 
     char plataforma_Buscada[50];
 
-    printf("=====Ingrese una Plataforma=====\n");
-    scanf(" %49[^\n]", plataforma_Buscada);
-    limpiar_Buffer();
+    elegir_Una_Plataforma(plataforma_Buscada, sizeof(plataforma_Buscada));
 
 
     Videojuego v;
     int encontrado = 0;
 
 
-    printf("=====JUEGOS PARA LA PLATAFORMA: %s =====\n", plataforma_Buscada);
+    printf("\n=====JUEGOS PARA LA PLATAFORMA: %s =====\n", plataforma_Buscada);
     printf("|| %-30s || %-5s || %-9s ||\n", "TITULO", "STOCK", "PRECIO");
 
 
@@ -465,7 +387,7 @@ void ver_Juegos_Por_Plataforma(const char *archivo_Videojuego)
         if(plataforma_Coincide(v.plataforma, plataforma_Buscada) == 1 && videojuego_Es_Valido(v) == 1)
         {
 
-            printf("|| %-30.30s || %-5d || $%-8g ||\n", v.titulo, v.stock, v.precioAdquisicion);
+            printf("|| %-30.30s || %-5d || $%-8.2f ||\n", v.titulo, v.stock, v.precioAdquisicion);
             encontrado++;
 
         }
@@ -498,7 +420,7 @@ void info_De_Videojuego(const char *archivo_Videojuego)
     }
 
 
-    int id_Buscado = leer_Entero("=====Ingrese el ID del Videojuego que desea Buscar=====\n", 0);
+    int id_Buscado = leer_Entero("=====Ingrese el ID del Videojuego que desea Buscar (Pon 0 para Salir)=====\n", 0);
 
 
     if(id_Buscado == 0)

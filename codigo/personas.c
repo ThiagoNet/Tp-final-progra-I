@@ -1,7 +1,8 @@
 #include <stdio.h>
 #include <string.h>
-#include <stdlib.h>
 #include "personas.h"
+#include "validaciones.h"
+#include "listas.h"
 
 int buscarPersonaPorDni(const char *dni, Persona *resultado)
 {
@@ -56,8 +57,7 @@ void mostrarPersonaDetallada(void)
     char dni[15];
     Persona encontrada;
 
-    printf("Ingrese un dni:\n");
-    scanf("%14s", dni);
+    leer_Digitos("Ingrese un dni: ", dni, sizeof(dni), 7);
 
     if (buscarPersonaPorDni(dni, &encontrada) == 1)
     {
@@ -72,14 +72,10 @@ void mostrarPersonaDetallada(void)
 void pedirDatosPersona(Persona *p)
 {
 
-    printf("Ingrese el nombre de la persona\n");
-    scanf(" %49[^\n]", p->nombre);
-    printf("Ingrese la direccion de la persona\n");
-    scanf(" %29[^\n]", p->direccion);
-    printf("Ingrese el telefono de la persona\n");
-    scanf(" %19s", p->telefono);
-    printf("Ingrese el rol de la persona\n");
-    scanf(" %14[^\n]", p->rol);
+    leer_Texto("Ingrese el nombre de la persona: ", p->nombre, sizeof(p->nombre));
+    leer_Texto("Ingrese la direccion de la persona: ", p->direccion, sizeof(p->direccion));
+    leer_Digitos("Ingrese el telefono de la persona: ", p->telefono, sizeof(p->telefono), 6);
+    elegir_Rol(p->rol, sizeof(p->rol));
 }
 
 int buscarPosicionPersona(const char *dni)
@@ -107,62 +103,100 @@ int buscarPosicionPersona(const char *dni)
     return posicion;
 }
 
-void guardarPersonaNueva(const Persona *p)
+//Devuelve 1 si se guardo bien y 0 si hubo error
+int guardarPersonaNueva(const Persona *p)
 {
 
     FILE *archivo = fopen(ARCHIVO_PERSONAS, "ab");
     if(archivo == NULL)
     {
         printf("No se pudo abrir el archivo de personas\n");
-        return;
+        return 0;
     }
 
-    fwrite(p, sizeof(Persona), 1, archivo);
+    int escritos = fwrite(p, sizeof(Persona), 1, archivo);
     fclose(archivo);
+
+    return escritos == 1;
 }
 
-void sobrescribirPersona(int posicion, const Persona *p)
+//Devuelve 1 si se guardo bien y 0 si hubo error
+int sobrescribirPersona(int posicion, const Persona *p)
 {
 
     FILE *archivo = fopen(ARCHIVO_PERSONAS, "rb+");
     if(archivo == NULL)
     {
         printf("No se pudo abrir el archivo de personas\n");
-        return;
+        return 0;
     }
 
-    fseek(archivo, posicion * sizeof(Persona), SEEK_SET);
-    fwrite(p, sizeof(Persona), 1, archivo);
+    fseek(archivo, (long)posicion * (long)sizeof(Persona), SEEK_SET);
+    int escritos = fwrite(p, sizeof(Persona), 1, archivo);
     fclose(archivo);
+
+    return escritos == 1;
 }
 
-void agregarModificarPersona(void)
+void agregarPersona(void)
 {
 
     char dni[15];
 
-    printf("Ingrese el numero de dni de la persona:\n");
-    scanf("%14s", dni);
+    printf("\n=====AGREGAR PERSONA=====\n");
+    leer_Digitos("Ingrese el numero de dni de la persona: ", dni, sizeof(dni), 7);
 
-    int posicion = buscarPosicionPersona(dni);
+    if(buscarPosicionPersona(dni) != -1)
+    {
+        printf("Ya existe una persona con ese dni. Use la opcion de modificar.\n");
+        return;
+    }
 
     Persona nueva = {0};
     strcpy(nueva.dni, dni);
-    if(posicion != -1)
-    {
-        printf("La persona ya existe, ingrese los nuevos datos\n");
-    }
+
     pedirDatosPersona(&nueva);
 
-    if(posicion == -1)
+    if(guardarPersonaNueva(&nueva) == 1)
     {
-        guardarPersonaNueva(&nueva);
         printf("Persona Agregada!\n");
     }
     else
     {
-        sobrescribirPersona(posicion, &nueva);
+        printf("Error, la persona no pudo ser agregada.\n");
+    }
+
+}
+
+void modificarPersona(void)
+{
+
+    char dni[15];
+
+    printf("\n=====MODIFICAR PERSONA=====\n");
+    leer_Digitos("Ingrese el numero de dni de la persona: ", dni, sizeof(dni), 7);
+
+    int posicion = buscarPosicionPersona(dni);
+
+    if(posicion == -1)
+    {
+        printf("No existe una persona con ese dni\n");
+        return;
+    }
+
+    Persona nueva = {0};
+    strcpy(nueva.dni, dni);
+
+    printf("La persona existe, ingrese los nuevos datos\n");
+    pedirDatosPersona(&nueva);
+
+    if(sobrescribirPersona(posicion, &nueva) == 1)
+    {
         printf("Persona modificada!\n");
+    }
+    else
+    {
+        printf("Error, la persona no pudo ser modificada.\n");
     }
 
 }

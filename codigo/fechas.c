@@ -1,23 +1,21 @@
 #include <stdio.h>
 #include "fechas.h"
+#include "validaciones.h"
+
 static const int DIAS_POR_MES[12] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
 
 Fecha pedirFecha(void)
 {
 
-    Fecha f;
+    Fecha f = {0, 0, 0};
     int valida = 0;
     int diasMes;
+
     do
     {
-        printf("Ingrese el dia:\n");
-        scanf("%d", &f.dia);
-
-        printf("Ingrese el mes:\n");
-        scanf("%d", &f.mes);
-
-        printf("Ingrese el anio:\n");
-        scanf("%d", &f.anio);
+        f.dia = leer_Entero("Ingrese el dia: ", 1);
+        f.mes = leer_Entero("Ingrese el mes: ", 1);
+        f.anio = leer_Entero("Ingrese el anio: ", 1);
 
         if(f.mes >= 1 && f.mes <= 12 && f.anio > 0)
         {

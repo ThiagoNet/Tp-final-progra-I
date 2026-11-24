@@ -5,8 +5,13 @@
 
 //FUNCIONES:
 
+int obtenerProximoIdVideojuego(const char *archivo_Videojuego);
+
 //3a:
 void agregar_Videojuego(const char *archivo_Videojuego);
+
+//3b:
+void modificar_Videojuego(const char *archivo_Videojuego);
 
 //3e:
 void listado_Videojuego(const char *archivo_Videojuego);
