@@ -12,6 +12,7 @@ void mostrarMenu(void)
 {
     system("cls");
     printf("                             MENU PRINCIPAL                                \n");
+
     printf("\n[VIDEOJUEGOS]\n");
     printf(" 1. Agregar videojuego\n");
     printf(" 2. Modificar videojuego\n");
@@ -19,28 +20,33 @@ void mostrarMenu(void)
     printf(" 4. Videojuegos por plataforma\n");
     printf(" 5. Info detallada de videojuego\n");
     printf(" 6. Stock critico\n");
+
+    printf("\n[PERSONAS]\n");
     printf(" 7. Agregar persona\n");
     printf(" 8. Modificar persona\n");
     printf(" 9. Listado de personas\n");
     printf("10. Info detallada de persona\n");
+
+    printf("\n[TRANSACCIONES]\n");
     printf("11. Registrar venta\n");
     printf("12. Resumen de transacciones\n");
     printf("13. Detalle de transaccion\n");
+
+    printf("\n[REPORTES]\n");
     printf("14. Recaudacion mensual\n");
     printf("15. Venta de mayor ganancia\n");
-    printf(" 0. Salir\n");
 
+    printf("\n 0. Salir\n");
 }
 
 void ejecutarMenu(const Usuario *usuarioActual)
 {
     int opcion;
-    int idJuego;
 
     do
     {
         mostrarMenu();
-        opcion = leer_Opcion("Ingrese una opcion: ", 0, 19);
+        opcion = leer_Opcion("Ingrese una opcion: ", 0, 17);
 
         switch (opcion)
         {
@@ -93,7 +99,7 @@ void ejecutarMenu(const Usuario *usuarioActual)
             printf("Hasta luego\n");
             break;
         default:
-            printf("Opcion invalida\n");
+            printf("Opcion invalida. Elija una opcion entre 0 y 17\n");
             break;
         }
 
